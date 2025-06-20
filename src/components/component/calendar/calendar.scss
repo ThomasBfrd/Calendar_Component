@@ -1,0 +1,272 @@
+:root {
+  --calendar-background-color: "";
+  --calendar-primary-color: "";
+  --calendar-secondary-color: "";
+  --calendar-tertiary-color: "";
+  --calendar-active-color: "";
+  --calendar-text-primary-color: "";
+  --calendar-text-secondary-color: "";
+  --calendar-hover-color: "";
+}
+
+.calendar-container {
+  position: fixed;
+  z-index: 999;
+  display: flow;
+}
+
+.calendar {
+  position: absolute;
+  top: 0;
+  left: -135px;
+  font-family: Roboto, sans-serif !important;
+  background-color: var(--calendar-background-color);
+  border-radius: 8px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+  width: 270px;
+  animation: calendar-animation 350ms forwards ease-in-out alternate;
+
+  & > .calendar-header {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    padding: 5px 0 0 0;
+    color: var(--calendar-text-secondary-color);
+
+    & > .dropdowns {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      gap: 3%;
+      padding: 10px 0 5px 0;
+      color: var(--calendar-text-secondary-color);
+      background-color: var(--calendar-background-color);
+
+      & > .year {
+        text-align: center;
+        font-size: 0.8rem;
+        font-weight: normal;
+        position: relative;
+      }
+
+      & > .month {
+        text-align: center;
+        font-size: 0.8rem;
+        font-weight: normal;
+        position: relative;
+
+        & > .text {
+          font-weight: bold;
+          width: 100%;
+          text-align: center;
+          margin: 0 auto;
+        }
+      }
+
+      & .select-button {
+        color: var(--calendar-text-secondary-color);
+        background-color: transparent;
+        padding: 8px;
+        border-radius: 7px;
+        border-style: none;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0 auto;
+        font-weight: 600;
+
+        &:hover {
+          background-color: var(--calendar-hover-color);
+          color: var(--calendar-text-secondary-color);
+        }
+      }
+
+      & .dropdown {
+        z-index: 15;
+        border-radius: 7px;
+        position: absolute;
+        left: 70%;
+        top: 0;
+        overflow-y: scroll;
+        height: 180px;
+        width: 100px;
+        overscroll-behavior-y: contain;
+        scroll-behavior: smooth;
+        background-color: var(--calendar-background-color);
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+
+        & > .dropdown-item {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          width: 50px;
+          height: 30px;
+          margin: 0 auto;
+          cursor: pointer;
+
+          & > .select-highlight {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: var(--calendar-primary-color);
+            color: var(--calendar-text-primary-color);
+            margin: 0 auto;
+            width: 50px;
+            height: 30px;
+            border-radius: 7px;
+
+            &:hover {
+              background-color: var(--calendar-active-color);
+            }
+          }
+
+          &:hover {
+            background-color: var(--calendar-primary-color);
+            color: var(--calendar-text-primary-color);
+            margin: 0 auto;
+            width: 50px;
+            height: 30px;
+            border-radius: 7px;
+          }
+        }
+      }
+    }
+
+    & > .reload {
+      position: absolute;
+      top: 10px;
+      right: 12px;
+      cursor: pointer;
+      height: 15px;
+      width: 15px;
+      stroke: var(--calendar-text-secondary-color);
+
+      &:hover {
+        color: var(--calendar-primary-color);
+      }
+    }
+
+    & .arrow {
+      border: solid var(--calendar-text-secondary-color);
+      border-width: 0 2px 2px 0;
+      display: inline-block;
+      padding: 2.5px;
+      cursor: pointer;
+      color: var(--calendar-text-secondary-color);
+      margin-bottom: 3px;
+    }
+
+    & .down {
+      transform: rotate(45deg);
+      -webkit-transform: rotate(45deg);
+      margin-left: 8px;
+    }
+
+    & > .days {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      justify-items: center;
+      font-size: 0.7rem;
+      padding: 0 10px;
+      font-weight: bold;
+    }
+  }
+
+  & > .calendar-body {
+    background-color: var(--calendar-background-color);
+    padding: 10px;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-template-rows: repeat(6, 1fr);
+    justify-items: center;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+
+    & > .body-day {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 30px;
+      width: 30px;
+      font-weight: normal;
+      cursor: pointer;
+      color: var(--calendar-text-secondary-color);
+
+      &:hover {
+        background-color: var(--calendar-hover-color);
+        border-radius: 50px;
+        font-weight: bold;
+      }
+    }
+
+    & > .highlight {
+      background-color: var(--calendar-primary-color);
+      color: var(--calendar-text-primary-color);
+      border-radius: 50px;
+      font-weight: bold;
+
+      &:hover {
+        background-color: var(--calendar-active-color);
+      }
+    }
+
+    & > .mask {
+      color: rgba(0, 0, 0, 0.3);
+      font-weight: lighter;
+      font-size: 0.7rem;
+      pointer-events: none;
+    }
+  }
+
+  & > .calendar-footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10%;
+    padding: 0 0 20px 0;
+
+    & > .footer-button {
+      border-style: none;
+      padding: 10px 25px;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    & > .cancel {
+      background-color: var(--calendar-tertiary-color);
+      color: var(--calendar-text-secondary-color);
+
+      &:hover {
+        background-color: var(--calendar-hover-color);
+      }
+    }
+
+    & > .submit {
+      background-color: var(--calendar-primary-color);
+      color: var(--calendar-text-primary-color);
+
+      &:hover {
+        color: var(--calendar-text-secondary-color);
+        background-color: var(--calendar-active-color);
+      }
+    }
+  }
+}
+
+@keyframes calendar-animation {
+  from {
+    transform: translate(0, 0);
+    opacity: 0;
+  }
+
+  to {
+    transform: translate(0, 5%);
+    opacity: 1;
+  }
+}
