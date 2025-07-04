@@ -14,6 +14,7 @@ export interface CalendarProps {
     textSecondaryColor?: string;
     hoverColor?: string;
     onDateChange?: (date: string) => void;
+    onCancelCalendar?: () => void;
 }
 
 export interface MonthDto {
@@ -57,21 +58,28 @@ for (let i = 1950; i <= 2050; i++) {
     YEARS.push(i);
 }
 
-const Calendar = ({cancelButton = "Cancel", submitButton = "Submit", backgroundColor = "#ffffff", primaryColor = "#7247EC",
-                      secondaryColor = "#ffffff", tertiaryColor = "#d0d0d0", activeColor = "#a38cef",
-                      textPrimaryColor = "#FFFFFE", textSecondaryColor = "#2D2C2F", hoverColor = "#f4f4f4",
-                      onDateChange}: CalendarProps) => {
+const Calendar = ({
+                      cancelButton = "Cancel",
+                      submitButton = "Submit",
+                      backgroundColor = "#ffffff",
+                      primaryColor = "#7247EC",
+                      secondaryColor = "#ffffff",
+                      tertiaryColor = "#d0d0d0",
+                      activeColor = "#a38cef",
+                      textPrimaryColor = "#FFFFFE",
+                      textSecondaryColor = "#2D2C2F",
+                      hoverColor = "#f4f4f4",
+                      onDateChange,
+                      onCancelCalendar
+                  }: CalendarProps) => {
 
     const [date, setDate] = useState(new Date());
-    const [resultDate, setResultDate] = useState('');
     const [month, setMonth] = useState(new Date().getMonth());
     const [year, setYear] = useState(new Date().getFullYear());
-    const [showCalendar, setShowCalendar] = useState(false);
     const [showYearDropdown, setShowYearDropdown] = useState(false);
     const [showMonthDropdown, setShowMonthDropdown] = useState(false);
     const dropdownYearRef: RefObject<HTMLDivElement | null> = useRef<HTMLDivElement | null>(null);
     const dropdownMonthRef: RefObject<HTMLDivElement | null> = useRef<HTMLDivElement | null>(null);
-    const calendarRef: RefObject<HTMLDivElement | null> = useRef<HTMLDivElement | null>(null);
     const currentMonthRef: RefObject<HTMLDivElement | null> = useRef<HTMLDivElement>(null);
     const currentYearRef: RefObject<HTMLDivElement | null> = useRef<HTMLDivElement>(null);
 
@@ -129,13 +137,9 @@ const Calendar = ({cancelButton = "Cancel", submitButton = "Submit", backgroundC
 
     useEffect(() => {
         function handleClickOutside(event: MouseEvent) {
-            if (calendarRef.current && !calendarRef.current.contains(event.target as Node)) {
-                setShowCalendar(false);
+            if (dropdownMonthRef.current && !dropdownMonthRef.current.contains(event.target as Node)) {
                 setShowMonthDropdown(false);
-                setShowYearDropdown(false);
-            } else if (calendarRef.current && dropdownMonthRef.current && !dropdownMonthRef.current.contains(event.target as Node)) {
-                setShowMonthDropdown(false);
-            } else if (calendarRef.current && dropdownYearRef.current && !dropdownYearRef.current.contains(event.target as Node)) {
+            } else if (dropdownYearRef.current && !dropdownYearRef.current.contains(event.target as Node)) {
                 setShowYearDropdown(false);
             }
         }
@@ -145,7 +149,7 @@ const Calendar = ({cancelButton = "Cancel", submitButton = "Submit", backgroundC
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
         }
-    }, [calendarRef, dropdownYearRef, dropdownMonthRef]);
+    }, [dropdownYearRef, dropdownMonthRef, onCancelCalendar]);
 
     useEffect(() => {
         if (showYearDropdown && currentYearRef.current) {
@@ -197,10 +201,6 @@ const Calendar = ({cancelButton = "Cancel", submitButton = "Submit", backgroundC
         setShowMonthDropdown(true);
     }
 
-    function handleShowCalendar() {
-        setShowCalendar(!showCalendar);
-    }
-
     function setClassNameDays(monthValue: MonthDto) {
         const formatDate = new Date(monthValue.value);
         const isSameMonth = formatDate.getMonth() === month && formatDate.getFullYear() === year;
@@ -212,23 +212,25 @@ const Calendar = ({cancelButton = "Cancel", submitButton = "Submit", backgroundC
     }
 
     function handleSubmitDate() {
-        setResultDate(date.toLocaleDateString());
-        setShowCalendar(false);
 
         if (onDateChange) {
-            onDateChange(date.toLocaleDateString());
+            console.log(new Date(date).toDateString())
+            onDateChange(new Date(date).toDateString());
+        }
+
+        if (onCancelCalendar) {
+            return onCancelCalendar();
         }
     }
 
+
     return (
         <div className="container">
-            <input type="text" onClick={handleShowCalendar} defaultValue={resultDate ?? ''}></input>
-            {showCalendar ? (
-                <div className="calendar-container">
-                <div className="calendar" ref={calendarRef}>
+            <div className="calendar-container">
+                <div className="calendar">
                     <div className="calendar-header">
                         <div className="reload" onClick={handleResetCalendar}>
-                            <Icon />
+                            <Icon/>
                         </div>
                         <div className="dropdowns">
                             <div className="month">
@@ -244,7 +246,7 @@ const Calendar = ({cancelButton = "Cancel", submitButton = "Submit", backgroundC
                                                 onClick={(e) => {
                                                     e.stopPropagation();
                                                     handleChangeMonth(MONTHS.indexOf(m));
-                                                }}                                        >
+                                                }}>
                                                 <p className={m === MONTHS[month] ? "select-highlight" : ""}>{m}</p>
                                             </div>
                                         ))}
@@ -279,16 +281,16 @@ const Calendar = ({cancelButton = "Cancel", submitButton = "Submit", backgroundC
                     </div>
                     <div className="calendar-body">
                         {calendar?.map((dayValue: MonthDto, index: number) => (
-                            <div className={setClassNameDays(dayValue)} key={index} onClick={() => handleSetDate(dayValue)}>{dayValue.day}</div>
+                            <div className={setClassNameDays(dayValue)} key={index}
+                                 onClick={() => handleSetDate(dayValue)}>{dayValue.day}</div>
                         ))}
                     </div>
                     <div className="calendar-footer">
-                        <button className="footer-button cancel" onClick={handleShowCalendar}>{cancelButton}</button>
-                        <button className="footer-button submit" onClick={handleSubmitDate}>{submitButton}</button>
+                        <button className="footer-button cancel" type="button" onClick={onCancelCalendar}>{cancelButton}</button>
+                        <button className="footer-button submit" type="button" onClick={handleSubmitDate}>{submitButton}</button>
                     </div>
                 </div>
-                </div>
-            ) : null}
+            </div>
         </div>
     );
 };
