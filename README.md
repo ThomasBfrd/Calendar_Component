@@ -1,54 +1,72 @@
-# React + TypeScript + Vite
+# React Calendar Component
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A simple and fully customizable calendar component for React, built with Typescript
 
-Currently, two official plugins are available:
+![SASS](https://img.shields.io/badge/SASS-hotpink.svg?style=for-the-badge&logo=SASS&logoColor=white)
+![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)
+![Vite](https://img.shields.io/badge/vite-%23646CFF.svg?style=for-the-badge&logo=vite&logoColor=white)
+![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+## Installation
+In your project, just copy and paste this line :
+```
+npm i @thomasbfrd/calendar
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Features
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- Modern calendar UI with current-day highlight
+- Year & month selection with dropdowns
+- Reset button to today's date
+- Close button to dismiss the calendar
+- Submit button with Callback to handle the selected date via the `onDateChange` prop
+- Highly customizable colors
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+
+## Usage
+You must import the component and the style. <br>
+Available props:
 ```
+export interface CalendarProps {
+    cancelButton?: string; // Title of the cancel button
+    submitButton?: string; // Title of the submit button
+    backgroundColor?: string; // Background color of the calendar
+    primaryColor?: string; // Primary color in the calendar
+    secondaryColor?: string; // Secondary color in the calendar
+    tertiaryColor?: string; // Tertiary color in the calendar
+    activeColor?: string; // Highlighted color (like the actual or selected date)
+    textPrimaryColor?: string; // Primary text color
+    textSecondaryColor?: string; // Secondary text color
+    hoverColor?: string; // Color for the hover
+    onDateChange?: (date: string) => void; // Callback to get back the selected date (date format)
+}
+```
+
+### Importation :
+```
+import { Calendar } from "@thomasbfrd/calendar";
+import "@thomasbfrd/calendar/dist/calendar.css";
+```
+
+Example:
+```
+<Calendar
+    backgroundColor="#ffffff"
+    primaryColor="#ef8354"
+    secondaryColor="#2d3142"
+    tertiaryColor="#ffffff"
+    activeColor="#ef8354"
+    textPrimaryColor="#ffffff"
+    textSecondaryColor="#2d3142"
+    hoverColor="#bfc0c0"
+    onDateChange={onDateChange}
+/>
+```
+
+### Customization
+
+You can override the default styles by passing your own color props.
+
+## Demo
+
+![CalendarDemo](https://i.postimg.cc/QdnmtPYd/calendar-demo.png)
