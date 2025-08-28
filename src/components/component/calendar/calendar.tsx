@@ -1,10 +1,8 @@
-import {RefObject, useEffect, useMemo, useRef, useState} from "react";
+import React, {RefObject, useEffect, useMemo, useRef, useState} from "react";
 import "./calendar.scss";
 import Icon from "../icon/icon";
 
 export interface CalendarProps {
-    cancelButton?: string;
-    submitButton?: string;
     backgroundColor?: string;
     primaryColor?: string;
     secondaryColor?: string;
@@ -22,27 +20,27 @@ export interface MonthDto {
     value: string;
 }
 
-const MONTHS = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre']
-const days = [
+const MONTHS: Array<string> = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+const days: Array<{index: number, day: string}> = [
     {
         index: 1,
-        day: 'Lu'
+        day: 'Mo'
     },
     {
         index: 2,
-        day: 'Ma'
+        day: 'Tu'
     },
     {
         index: 3,
-        day: 'Me'
+        day: 'We'
     },
     {
         index: 4,
-        day: 'Je'
+        day: 'Th'
     },
     {
         index: 5,
-        day: 'Ve'
+        day: 'Fr'
     },
     {
         index: 6,
@@ -50,17 +48,11 @@ const days = [
     },
     {
         index: 7,
-        day: 'Di'
+        day: 'Su'
     },
 ]
-const YEARS: Array<number> = [];
-for (let i = 1950; i <= 2050; i++) {
-    YEARS.push(i);
-}
 
 const Calendar = ({
-                      cancelButton = "Cancel",
-                      submitButton = "Submit",
                       backgroundColor = "#ffffff",
                       primaryColor = "#7247EC",
                       secondaryColor = "#ffffff",
@@ -73,14 +65,31 @@ const Calendar = ({
                       onCancelCalendar
                   }: CalendarProps) => {
 
-    const [date, setDate] = useState(new Date());
-    const [month, setMonth] = useState(new Date().getMonth());
-    const [year, setYear] = useState(new Date().getFullYear());
-    const [showYearDropdown, setShowYearDropdown] = useState(false);
-    const [showMonthDropdown, setShowMonthDropdown] = useState(false);
+    const YEARS: Array<number> = useMemo(() => {
+        const allYears: Array<number> = [];
+        for (let i: number = 1950; i <= (new Date().getFullYear() + 1); i++) {
+            allYears.push(i);
+        }
+
+        return allYears;
+    }, [])
+
+    const [date, setDate] = useState<Date>(new Date());
+
+    const [month, setMonth] = useState<number>(new Date().getMonth());
+
+    const [year, setYear] = useState<number>(new Date().getFullYear());
+
+    const [showYearDropdown, setShowYearDropdown] = useState<boolean>(false);
+
+    const [showMonthDropdown, setShowMonthDropdown] = useState<boolean>(false);
+
     const dropdownYearRef: RefObject<HTMLDivElement | null> = useRef<HTMLDivElement | null>(null);
+
     const dropdownMonthRef: RefObject<HTMLDivElement | null> = useRef<HTMLDivElement | null>(null);
+
     const currentMonthRef: RefObject<HTMLDivElement | null> = useRef<HTMLDivElement>(null);
+
     const currentYearRef: RefObject<HTMLDivElement | null> = useRef<HTMLDivElement>(null);
 
     const currentMonth = useMemo(() => {
@@ -98,12 +107,12 @@ const Calendar = ({
     const calendar = useMemo(() => {
         if (currentMonth.length === 0) return;
 
-        const firstDayOfMonth = new Date(year, month, 1);
-        const positionOfTheFirstDayInTheWeek = (firstDayOfMonth.getDay() + 6) % 7;
+        const firstDayOfMonth: Date = new Date(year, month, 1);
+        const positionOfTheFirstDayInTheWeek: number = (firstDayOfMonth.getDay() + 6) % 7;
 
         const before = Array(positionOfTheFirstDayInTheWeek);
         for (let i = 0; i < positionOfTheFirstDayInTheWeek; i++) {
-            const lastDayPreviousMonth = new Date(year, month, 0).getDate();
+            const lastDayPreviousMonth: number = new Date(year, month, 0).getDate();
             const day: string = new Date(year, month - 1, lastDayPreviousMonth - i).toDateString();
             before[i] = {
                 day: lastDayPreviousMonth - i,
@@ -112,7 +121,7 @@ const Calendar = ({
         }
         before.reverse();
 
-        const after = Array(42 - (positionOfTheFirstDayInTheWeek + (currentMonth.length)));
+        const after: Array<MonthDto> = Array(42 - (positionOfTheFirstDayInTheWeek + (currentMonth.length)));
         for (let i = 0; i < after.length; i++) {
             const day: string = new Date(year, month + 1, i + 1).toDateString();
             after[i] = {
@@ -152,7 +161,7 @@ const Calendar = ({
     }, [dropdownYearRef, dropdownMonthRef, onCancelCalendar]);
 
     useEffect(() => {
-        if (showYearDropdown && currentYearRef.current) {
+        if (showYearDropdown && dropdownYearRef.current && currentYearRef.current) {
             currentYearRef.current.scrollIntoView({
                 behavior: 'instant',
                 block: 'center',
@@ -169,35 +178,39 @@ const Calendar = ({
         }
     }, [showMonthDropdown, showYearDropdown])
 
-    function getDaysInMonth() {
+    function getDaysInMonth(): number {
         return new Date(year, month + 1, 0).getDate();
     }
 
-    function handleSetDate(day: MonthDto) {
+    function handleSetDate(day: MonthDto): void {
         setDate(new Date(day.value));
     }
 
-    function handleChangeYear(value: number) {
+    function handleChangeYear(value: number): void {
         setYear(value);
         setShowYearDropdown(false);
     }
 
-    function handleChangeMonth(value: number) {
+    function handleChangeMonth(value: number): void {
         setMonth(MONTHS.indexOf(MONTHS[value]));
         setShowMonthDropdown(false);
     }
 
-    function handleResetCalendar() {
+    function handleResetCalendar(): void {
         setYear(new Date().getFullYear());
         setMonth(new Date().getMonth());
         setDate(new Date());
     }
 
-    function toggleYearDropdown() {
+    function toggleYearDropdown(e: React.MouseEvent): void {
+        e.stopPropagation();
+        e.preventDefault();
         setShowYearDropdown(true);
     }
 
-    function toggleMonthDropdown() {
+    function toggleMonthDropdown(e: React.MouseEvent): void {
+        e.stopPropagation();
+        e.preventDefault();
         setShowMonthDropdown(true);
     }
 
@@ -213,13 +226,8 @@ const Calendar = ({
 
     function handleSubmitDate() {
 
-        if (onDateChange) {
-            console.log(new Date(date).toDateString())
+        if (onDateChange && date) {
             onDateChange(new Date(date).toDateString());
-        }
-
-        if (onCancelCalendar) {
-            return onCancelCalendar();
         }
     }
 
@@ -234,17 +242,18 @@ const Calendar = ({
                         </div>
                         <div className="dropdowns">
                             <div className="month">
-                                <button onClick={toggleMonthDropdown} className="select-button">{MONTHS[month]} <span
-                                    className="arrow down"></span></button>
+                                <button type="button"
+                                        onClick={toggleMonthDropdown}
+                                        className="select-button">{MONTHS[month]}
+                                    <span className="arrow down"></span></button>
                                 {showMonthDropdown && (
                                     <div className="dropdown" ref={dropdownMonthRef}>
-                                        {MONTHS.map((m) => (
+                                        {MONTHS.map((m: string, index: number) => (
                                             <div
-                                                key={m}
+                                                key={index}
                                                 className="dropdown-item"
                                                 ref={m === MONTHS[month] ? currentMonthRef : null}
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
+                                                onClick={() => {
                                                     handleChangeMonth(MONTHS.indexOf(m));
                                                 }}>
                                                 <p className={m === MONTHS[month] ? "select-highlight" : ""}>{m}</p>
@@ -254,14 +263,16 @@ const Calendar = ({
                                 )}
                             </div>
                             <div className="year">
-                                <button onClick={toggleYearDropdown} className="select-button">{year}
+                                <button type="button"
+                                        onClick={toggleYearDropdown}
+                                        className="select-button">{year}
                                     <span className="arrow down"></span>
                                 </button>
                                 {showYearDropdown && (
                                     <div className="dropdown" ref={dropdownYearRef}>
-                                        {YEARS.map((y) => (
+                                        {YEARS.map((y: number, index: number) => (
                                             <div
-                                                key={y}
+                                                key={index}
                                                 className="dropdown-item"
                                                 ref={y === year ? currentYearRef : null}
                                                 onClick={() => handleChangeYear(y)}
@@ -286,8 +297,14 @@ const Calendar = ({
                         ))}
                     </div>
                     <div className="calendar-footer">
-                        <button className="footer-button cancel" type="button" onClick={onCancelCalendar}>{cancelButton}</button>
-                        <button className="footer-button submit" type="button" onClick={handleSubmitDate}>{submitButton}</button>
+                        <button className="footer-button cancel" type="button" onClick={(e) => {
+                            e.stopPropagation();
+                            e.preventDefault();
+                            if (onCancelCalendar) {
+                                return onCancelCalendar();
+                            }
+                        }}>Cancel</button>
+                        <button className="footer-button submit" type="button" onClick={handleSubmitDate}>Submit</button>
                     </div>
                 </div>
             </div>

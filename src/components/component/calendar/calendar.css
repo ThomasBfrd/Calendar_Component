@@ -16,8 +16,8 @@
 
 .calendar {
   position: absolute;
-  top: -10px;
-  left: -135px;
+  top: 0;
+  left: 0;
   font-family: Roboto, sans-serif !important;
   background-color: var(--calendar-background-color);
   border-radius: 8px;
@@ -78,6 +78,7 @@
   color: var(--calendar-text-secondary-color);
 }
 .calendar > .calendar-header > .dropdowns .dropdown {
+  contain: content;
   z-index: 15;
   border-radius: 7px;
   position: absolute;
@@ -93,15 +94,17 @@
   flex-direction: column;
   gap: 8px;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+  padding: 10px 0;
 }
 .calendar > .calendar-header > .dropdowns .dropdown > .dropdown-item {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 50px;
+  width: 90%;
   height: 30px;
   margin: 0 auto;
   cursor: pointer;
+  letter-spacing: 0.5px;
 }
 .calendar > .calendar-header > .dropdowns .dropdown > .dropdown-item > .select-highlight {
   display: flex;
@@ -110,9 +113,10 @@
   background-color: var(--calendar-primary-color);
   color: var(--calendar-text-primary-color);
   margin: 0 auto;
-  width: 50px;
   height: 30px;
+  width: 100%;
   border-radius: 7px;
+  font-weight: 600;
 }
 .calendar > .calendar-header > .dropdowns .dropdown > .dropdown-item > .select-highlight:hover {
   background-color: var(--calendar-active-color);
@@ -121,7 +125,6 @@
   background-color: var(--calendar-primary-color);
   color: var(--calendar-text-primary-color);
   margin: 0 auto;
-  width: 50px;
   height: 30px;
   border-radius: 7px;
 }
