@@ -10,9 +10,8 @@
 }
 
 .calendar-container {
-  position: fixed;
+  position: relative;
   z-index: 999;
-  display: flow;
 }
 
 .calendar {
@@ -84,6 +83,7 @@
       }
 
       & .dropdown {
+        contain: content;
         z-index: 15;
         border-radius: 7px;
         position: absolute;
