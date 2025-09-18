@@ -50,7 +50,7 @@ const days: Array<{index: number, day: string}> = [
         index: 7,
         day: 'Su'
     },
-]
+];
 
 const Calendar = ({
                       backgroundColor = "#ffffff",
