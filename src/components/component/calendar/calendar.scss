@@ -99,15 +99,17 @@
         flex-direction: column;
         gap: 8px;
         box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        padding: 10px 0;
 
         & > .dropdown-item {
           display: flex;
           justify-content: center;
           align-items: center;
-          width: 50px;
+          width: 90%;
           height: 30px;
           margin: 0 auto;
           cursor: pointer;
+          letter-spacing: 0.5px;
 
           & > .select-highlight {
             display: flex;
@@ -116,9 +118,10 @@
             background-color: var(--calendar-primary-color);
             color: var(--calendar-text-primary-color);
             margin: 0 auto;
-            width: 50px;
             height: 30px;
+            width: 100%;
             border-radius: 7px;
+            font-weight: 600;
 
             &:hover {
               background-color: var(--calendar-active-color);
@@ -129,7 +132,6 @@
             background-color: var(--calendar-primary-color);
             color: var(--calendar-text-primary-color);
             margin: 0 auto;
-            width: 50px;
             height: 30px;
             border-radius: 7px;
           }
